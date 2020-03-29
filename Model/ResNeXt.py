@@ -292,7 +292,7 @@ def get_model_resnet50(img_size, batch_size):
     # Create model.
     model = tf.keras.Model(inputs, out)
     model.compile(optimizer=Adam(learning_rate=0.00007,
-    beta1=0.9, beta2=0.999, epsilon=1e-08),
+    beta_1=0.9, beta_2=0.999, epsilon=1e-08),
     loss='binary_crossentropy', metrics=['acc'])
 
     return model
@@ -315,7 +315,7 @@ def get_model_resnext50(img_size, batch_size):
     # Create model.
     model = tf.keras.Model(inputs, out)
     model.compile(optimizer=Adam(learning_rate=0.00007,
-    beta1=0.9, beta2=0.999, epsilon=1e-08, use_locking=False, name='Adam'),
+    beta_1=0.9, beta_2=0.999, epsilon=1e-08, use_locking=False, name='Adam'),
     loss='binary_crossentropy', metrics=['acc'])
 
     return model
