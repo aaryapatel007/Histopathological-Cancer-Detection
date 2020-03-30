@@ -105,7 +105,7 @@ def spatial_attention(input_feature):
 		cbam_feature = Permute((3, 1, 2))(cbam_feature)
 		
 	return multiply([input_feature, cbam_feature])
-def ResNext(input_shape=None,
+def CBAMResNext(input_shape=None,
               depth=29,
               cardinality=8,
               width=64,
@@ -204,7 +204,7 @@ def ResNext(input_shape=None,
     return model
 
 
-def ResNextImageNet(input_shape=None,
+def CBAMResNextImageNet(input_shape=None,
                       depth=[3, 4, 6, 3],
                       cardinality=32,
                       width=4,
