@@ -30,3 +30,13 @@ import itertools
 import shutil
 import matplotlib.pyplot as plt
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
+
+
+df_train, df_val = train_test_split(df, test_size=0.1, stratify= df['label'])
+
+print("Train data: " + str(len(df_train[df_train["label"] == 1]) + len(df_train[df_train["label"] == 0])))
+print("True positive in train data: " +  str(len(df_train[df_train["label"] == 1])))
+print("True negative in train data: " +  str(len(df_train[df_train["label"] == 0])))
+print("Valid data: " + str(len(df_val[df_val["label"] == 1]) + len(df_val[df_val["label"] == 0])))
+print("True positive in validation data: " +  str(len(df_val[df_val["label"] == 1])))
+print("True negative in validation data: " +  str(len(df_val[df_val["label"] == 0])))
