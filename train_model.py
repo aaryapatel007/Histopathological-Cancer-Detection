@@ -23,7 +23,7 @@ from keras_applications.resnext import ResNeXt50
 from albumentations import Resize,Compose, RandomRotate90, Transpose, Flip, OneOf, CLAHE, IAASharpen, IAAEmboss, RandomBrightnessContrast, JpegCompression, Blur, GaussNoise, HueSaturationValue, ShiftScaleRotate, Normalize
 
 from sklearn.utils import shuffle
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import roc_auc_score,confusion_matrix,classification_report, roc_curve, auc
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from skimage import data, exposure
 import itertools
@@ -128,3 +128,40 @@ plt.ylabel("acc")
 plt.xlabel("epoch")
 plt.legend(["train", "valid"], loc="upper left")
 plt.savefig('acc_performance.png')
+
+
+### Inference Code ###
+
+preds = model.predict_generator(data_gen(val_list,1,do_inference_aug),steps = len(val_list))
+y_preds = np.array(preds)
+
+#Taking 0.5 as threshold for classification
+y_preds[preds >= 0.5] = 1
+y_preds[preds < 0.5] = 0
+true = df_val['label'].values
+
+# printing AUC_ROC score
+print(roc_auc_score(true,preds))
+
+# Plotting the AUC_ROC curve
+fpr, tpr, threshold = roc_curve(true, preds)
+roc_auc = auc(fpr, tpr)
+
+plt.title('Receiver Operating Characteristic')
+plt.plot(fpr, tpr, 'g', label = 'AUC = %0.2f' % roc_auc)
+plt.legend(loc = 'lower right')
+plt.plot([0, 1], [0, 1],'r--')
+plt.xlim([0, 1])
+plt.ylim([0, 1])
+plt.ylabel('True Positive Rate')
+plt.xlabel('False Positive Rate')
+plt.show()
+plt.savefig('octresnet50_auc_roc.png')
+
+# printing and plotting confusion matrix
+cm = confusion_matrix(true,y_preds)
+plot_confusion_matrix(cm,['no_tumor_tissue', 'has_tumor_tissue'])
+
+# classification report consist of precision, recall, f1-score
+report = classification_report(true,y_preds,target_names=['no_tumor_tissue', 'has_tumor_tissue'])
+print(report)
