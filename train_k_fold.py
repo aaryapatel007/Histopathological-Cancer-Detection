@@ -95,7 +95,7 @@ for fold in range(n_folds):
     print(dict(zip(values,count)))
     
     # Defining ResNeXt_CBAM model
-    base_model = ResNextImageNet(include_top=False, weights=None,  input_shape=img_size)
+    base_model = CBAMResNextImageNet(include_top=False, weights=None,  input_shape=img_size)
     x = base_model.output
 
     out1 = GlobalMaxPooling2D()(x)
