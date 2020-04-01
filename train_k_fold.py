@@ -53,28 +53,10 @@ df_train = pd.read_csv("/CSV/train_labels.csv")
 # Dictionary mapping Image IDs to corresponding labels....used in data_generator.py
 id_label_map = {i:j for i,j in zip(df_train.id.values,df_train.label.values)}
 
-# Defining ResNeXt_CBAM model
-base_model = ResNextImageNet(include_top=False, weights=None,  input_shape=img_size)
-x = base_model.output
-
-out1 = GlobalMaxPooling2D()(x)
-out2 = GlobalAveragePooling2D()(x)
-#out3 = Flatten()(x)
-out = concatenate([out1,out2])
-out = BatchNormalization(epsilon = 1e-5)(out)
-fc = Dropout(0.4)(out)
-fc = Dense(256,activation = 'relu')(fc)
-fc = BatchNormalization(epsilon = 1e-5)(fc)
-fc = Dropout(0.3)(fc)
-X = Dense(1, activation='sigmoid', kernel_initializer='glorot_uniform', bias_initializer='zeros')(fc)
-model =  Model(inputs=base_model.input, outputs=X)
-
-
-
-labeled_files = glob.glob('../path/to/dir/*.tif')
+train_files = glob.glob('../path/to/dir/*.tif')
 test_files = glob.glob('../path/to/dir/*.tif')
 
-print("labeled_files size :", len(labeled_files))
+print("train_files size :", len(train_files))
 print("test_files size :", len(test_files))
 
 df_dataset = pd.DataFrame()
@@ -89,6 +71,7 @@ df_dataset = df_dataset[df_dataset['id'] != '../path/to/dir/9369c7278ec8bcc6c880
 ensemble_preds = np.zeros(len(test_files), dtype=np.float)
 skf = StratifiedKFold(n_splits=n_folds)
 
+# Start K-Fold training
 for fold in range(n_folds):
 
     filepath = 'resnext_cbam_model_' + str(fold) + '.h5'
@@ -110,16 +93,33 @@ for fold in range(n_folds):
     print("Val: ")
     values,count = np.unique(df_dataset.iloc[result[1]]['label'].values,return_counts = True)
     print(dict(zip(values,count)))
+    
+    # Defining ResNeXt_CBAM model
+    base_model = ResNextImageNet(include_top=False, weights=None,  input_shape=img_size)
+    x = base_model.output
 
+    out1 = GlobalMaxPooling2D()(x)
+    out2 = GlobalAveragePooling2D()(x)
+    #out3 = Flatten()(x)
+    out = concatenate([out1,out2])
+    out = BatchNormalization(epsilon = 1e-5)(out)
+    fc = Dropout(0.4)(out)
+    fc = Dense(256,activation = 'relu')(fc)
+    fc = BatchNormalization(epsilon = 1e-5)(fc)
+    fc = Dropout(0.3)(fc)
+    X = Dense(1, activation='sigmoid', kernel_initializer='glorot_uniform', bias_initializer='zeros')(fc)
+    model =  Model(inputs=base_model.input, outputs=X)
+    
+    # Compiling the Keras Model
+    model.compile(loss='binary_crossentropy', optimizer=SGD(0.002, momentum=0.99, nesterov=True), metrics=['accuracy'])
+    
     lr_manager = OneCycleLR(max_lr=0.02, end_percentage=0.1, scale_percentage=None,
                             maximum_momentum=0.99,minimum_momentum=0.89)
 
-    model.compile(loss='binary_crossentropy', optimizer=SGD(0.002, momentum=0.99, nesterov=True), metrics=['accuracy'])
-    
     callbacks = [lr_manager,
                ModelCheckpoint(filepath=filepath, monitor='val_loss',mode='min',verbose=1,save_best_only=True)]
 
-
+    # Training Begins
     history = model.fit_generator(data_gen(train,id_label_map,train_batch_size,do_train_augmentations),steps_per_epoch=train_steps,epochs = 9,
                                    validation_data = data_gen(val,id_label_map,val_batch_size,do_inference_aug),validation_steps = val_steps,callbacks = callbacks)
 
