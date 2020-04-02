@@ -66,7 +66,9 @@ def mkdir_if_not_exist(directory):
             except OSError as e:
                 print("Error: %s - %s." % (e.filename, e.strerror))
 
-
+###############
+# Configuration
+###############
 
 train_limit = 220025 
 test_limit = 57458 
@@ -74,14 +76,11 @@ epochs = 10
 n_fold = 2 
 number_of_tpu_core = 8  
 batch_size = 64
+img_size = 96
+training_batch_size = batch_size * number_of_tpu_core
+    
 
 if __name__ == '__main__':
-  
-    ###############
-    # Configuration
-    ###############
-    img_size = 96
-    training_batch_size = batch_size * number_of_tpu_core
     
     
     ##################
@@ -178,4 +177,56 @@ if __name__ == '__main__':
         plot_metric(history, 'loss', str(fold))
         plot_metric(history, 'acc', str(fold))
 
+        #################
+        # Kaggle testing
+        #################
+        model.load_weights(h5_path)
+
+        preds = []
+        ids = []
+
+        predict_batch_size = 128 * 8
+        counter = 0
+        aug = do_inference_aug()
         
+        for batch in chunker(test_files[0:test_limit], predict_batch_size):
+          
+            print("Indexes: %i - %i" % (counter, counter + predict_batch_size))
+            
+            counter += predict_batch_size
+            X = [aug(image=(cv2.resize(cv2.imread(x), (img_size, img_size))))['image'] for x in batch]
+            ids_batch = [get_id_from_file_path(x) for x in batch]
+            
+            # predict_batch_size must be divisible by the number of TPU cores in use
+            dummy_rows = len(batch) % number_of_tpu_core
+            if dummy_rows > 0:
+              for i in range(0, number_of_tpu_core - dummy_rows):
+                X.append(np.zeros((img_size,img_size,3), dtype=np.float32))
+            
+            X = np.array(X)
+            
+            preds_batch = ((model.predict(X).ravel()*model.predict(X[:, ::-1, :, :]).ravel()*model.predict(X[:, ::-1, ::-1, :]).
+                            ravel()*model.predict(X[:, :, ::-1, :]).ravel())**0.25).tolist()
+            
+            preds += preds_batch
+            ids += ids_batch
+
+        df = pd.DataFrame({'id': ids, 'label': preds[0:-(number_of_tpu_core - dummy_rows)]})
+        df.to_csv("results_"+str(fold)+".csv", index=False)
+        print(df.head())
+
+        # sum the predicted values
+        ensemble_preds += np.array(preds[0:-(number_of_tpu_core - dummy_rows)], dtype=np.float)
+        
+        # in order to release the memory
+        del history
+        del model
+        gc.collect()
+        tf.keras.backend.clear_session()
+        
+# average the predicted values
+ensemble_preds /= n_fold
+
+df = pd.DataFrame({'id': ids, 'label': ensemble_preds.ravel()})
+df.to_csv("ensemble.csv", index=False)
+df.head()
