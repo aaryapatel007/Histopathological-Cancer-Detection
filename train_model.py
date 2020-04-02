@@ -40,7 +40,10 @@ from Model.ResNeXt_CBAM import *
 from Model.se_resnext import *
 from Model.baseline_model import *
 
-# Training Hyperparameters and other variables
+###############
+# Configuration
+###############
+
 img_size = (96,96,3)
 batch_size = 192
 epochs = 38
@@ -105,6 +108,10 @@ callbacks = [lr_manager,
 
 model.compile(loss='binary_crossentropy', optimizer=SGD(0.002, momentum=0.9, nesterov=True), metrics=['accuracy'])
 
+        ###########
+        # Training
+        ###########
+      
 history = model.fit_generator(data_gen(train_list, id_label_map, batch_size,do_train_augmentations),
                               validation_data=data_gen(val_list, id_label_map, batch_size,do_inference_aug),
                               epochs = epochs,
