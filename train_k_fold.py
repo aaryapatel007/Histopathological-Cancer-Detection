@@ -40,7 +40,10 @@ from Model.ResNeXt_CBAM import *
 from Model.se_resnext import *
 from Model.baseline_model import *
 
-# Training Hyperparameters and other variables
+###############
+# Configuration
+###############
+
 img_size = (96,96,3)
 train_batch_size = 224
 val_batch_size = 224
