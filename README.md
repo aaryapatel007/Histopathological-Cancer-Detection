@@ -5,6 +5,30 @@ Created an algorithm to identify metastatic cancer in small image patches taken 
 
 The dataset used for the research is a slightly modified    version    of    the    PatchCamelyon    (PCam)    [21],[22].The original PCam dataset contains duplicate images due to its probabilistic sampling, however, this   version   does   not   contain   duplicates.   The   dataset is open-source and can be downloaded from (<https://www.kaggle.com/c/histopathologic-cancer-detection/data>).   The   dataset   has   more   than   220K   RGB images  with  a  dimension  of  96x96x3.  The  given  problem  is  the  binary  classification  problem  where  the  associated label has two class labels i.e. tumor and non-tumor tissues. A  positive  label  indicates  that  the  center  32x32px  region  of a  patch  contains  at  least  one  pixel  of  tumor  tissue.
 
+## Research Objectives
+
+* Train various state-of-the-art deep learning architectures.
+* Do a comparative study among the various models.
+* Compare train-test splitting with stratified K-fold Cross-Validation.
+* Apply image processing techniques such as Contrast Limited Adaptive Histogram Equalization (CLAHE).
+* Apply various Image Augmentation techniques.
+* Replace adaptive learning rate with one cycle policy(cyclic learning rate).
+* Improve the model predictions with Test Time Augmentation(TTA).
+* Measure the model performance on Accuracy, Precision, Recall, F1-measure and AUC ROC.
+
+## Prerequisites
+
+* Python (3.6)
+* Keras (2.3.0)
+* Tensorflow (2.1)
+* NumPy (1.14.3)
+* Sklearn (0.22.2)
+* Albumentations (0.4.5)
+* pandas (0.22.0)
+* tqdm (4.19.8)
+* opencv-python (3.4.2)
+
+
 ## Results Table
 K-Fold result table of ```Model/baseline_model.py```:
 | CNN Model | AUC-ROC |
