@@ -50,3 +50,7 @@ Comparative result of SOTA models based on Train-Validation split of 90-10\%:
 | Inception-V3 + CBAM | 0.9656 | 0.97 | 0.97 | 0.97 | 0.9679 |
 | Xception | 0.9821 | 0.98 | 0.98 | 0.98 | 0.9608 |
 | OctaveResNet-50 | 0.959 | 0.96 | 0.96 | 0.96 | 0.9709 |
+
+## License
+
+This repository is licensed under the terms of the MIT license.
