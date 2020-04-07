@@ -12,16 +12,17 @@ from vis.utils import utils
 from vis.visualization import visualize_cam
 
 #plots gradCAM visualization
-def plot_map(grads):
+def plot_map(img, grads, class_index, y_pred):
     fig, axes = plt.subplots(1,2,figsize=(14,5))
-    axes[0].imshow(_img1)
-    axes[1].imshow(_img1)
+    axes[0].imshow(img)
+    axes[1].imshow(img)
     i = axes[1].imshow(grads,cmap="jet",alpha=0.8)
     fig.colorbar(i)
     plt.suptitle("Pr(class={}) = {:5.6f}".format(
-                      class_label[1],
-                      y_pred1[0,0]))
-    plt.savefig('tumor_class.png')
+                      class_label[class_index],
+                      y_pred[0,0]))
+    plt.show()
+    plt.savefig(class_label[class_index] + '.png')
 
 if __name__ == "__main__":
   #read the train data CSV file
@@ -68,5 +69,5 @@ if __name__ == "__main__":
                              backprop_modifier = None,
                              grad_modifier = None)
 
-  plot_map(grad_top1_no_tumor)
-  plot_map(grad_top1_tumor)
+  plot_map(img_no_tumor, grad_top1_no_tumor, 0, y_pred_no_tumor)
+  plot_map(img_tumor, grad_top1_tumor, 1, y_pred_tumor)
