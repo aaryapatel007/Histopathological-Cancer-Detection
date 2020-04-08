@@ -1,6 +1,11 @@
 # Histopathological-Cancer-Detection
 Created an algorithm to identify metastatic cancer in small image patches taken from larger digital pathology scans. The data for this competition is a slightly modified version of the PatchCamelyon (PCam) benchmark dataset
 
+## Motivation
+
+* Clinical diagnosis of breast cancer is best achieved by a biopsy. The pathologist diagnose by manually examining the histology slides under the microscope. However, the traditional diagnosis system needs expertise and only experienced pathologists can accurately determine the tumor tissues.
+* Currently, in various rural parts of India, people do not have access to good healthcare facilities. Also, new advanced equipment are not available in rural areas so it is even possible that patients are not diagnosed properly. One of the primary reasons for dismal healthcare in rural areas is shortage of experienced doctors.
+
 ## Dataset
 
 The dataset used for the research is a slightly modified    version    of    the    PatchCamelyon    (PCam)    [21],[22].The original PCam dataset contains duplicate images due to its probabilistic sampling, however, this   version   does   not   contain   duplicates.   The   dataset is open-source and can be downloaded from (<https://www.kaggle.com/c/histopathologic-cancer-detection/data>).   The   dataset   has   more   than   220K   RGB images  with  a  dimension  of  96x96x3.  The  given  problem  is  the  binary  classification  problem  where  the  associated label has two class labels i.e. tumor and non-tumor tissues. A  positive  label  indicates  that  the  center  32x32px  region  of a  patch  contains  at  least  one  pixel  of  tumor  tissue.
@@ -30,7 +35,6 @@ The dataset used for the research is a slightly modified    version    of    the
 * tqdm (4.19.8)
 * opencv-python (3.4.2)
 
-
 ## Results Table
 K-Fold result table of ```Model/baseline_model.py```:
 | CNN Model | AUC-ROC |
@@ -53,10 +57,10 @@ Comparative result of SOTA models based on Train-Validation split of 90-10\%:
 | Xception | 0.9821 | 0.98 | 0.98 | 0.98 | 0.9608 |
 | OctaveResNet-50 | 0.959 | 0.96 | 0.96 | 0.96 | 0.9709 |
 
-## License
-
-This repository is licensed under the terms of the MIT license.
-
 ## Visualization
 
 <img src="images/grad_cam.png" >
+
+## License
+
+This repository is licensed under the terms of the MIT license.
