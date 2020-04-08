@@ -35,6 +35,18 @@ The dataset used for the research is a slightly modified    version    of    the
 * tqdm (4.19.8)
 * opencv-python (3.4.2)
 
+
+## How to Run Code
+
+1. Git clone the repository to your local computer.
+1. Download the data from [Kaggle](https://www.kaggle.com/c/histopathologic-cancer-detection/data).
+1. Open a terminal in the folder containing the repository.
+1. Run `python train_model.py` for training a model using hold-out train-validation split.
+1. Run `python train_k_fold.py` training a model using stratified K-Fold cross validation split.
+1. Run `python gradcam_vis.py` for visualizing the gradient class-activation maps.
+
+#### `train_k_fold_tpu.py` can only run either on [Google Colab](https://colab.research.google.com/) or [GCP](https://console.cloud.google.com/) because TPUs are currently available on these online platforms.
+
 ## Results Table
 K-Fold result table of ```Model/baseline_model.py```:
 | CNN Model | AUC-ROC |
@@ -59,6 +71,9 @@ Comparative result of SOTA models based on Train-Validation split of 90-10\%:
 
 ## Visualization
 
+Following figure shows gradient class activation maps (Grad-CAM) on the penultimate convolutional block, which depict what areas of the image the CNN found most relevant for outcome
+prediction. The heat map represents how important each region of the image is to the given classification. This
+information can potentially be used by pathologists to make further hypotheses regarding the nature of the tumor.
 <img src="images/grad_cam.png" >
 
 ## License
