@@ -54,7 +54,7 @@ K-Fold result table of ```Model/baseline_model.py```:
 | baseline_model with 4 Conv2D layers(w/o K-fold) | 0.9348 |
 | baseline_model with 4 Conv2D layers(with 5-fold) | 0.9458 |
 | baseline_model with 7 Conv2D layers(with 5-fold) | 0.9643 |
-| baseline_model with 7 Conv2D layers(with 5x2-fold) | 0.9666 |
+| baseline_model with 7 Conv2D layers(with 5x2-fold) | **0.9666** |
 
 Comparative result of SOTA models based on Train-Validation split of 90-10\%:
 
@@ -67,7 +67,7 @@ Comparative result of SOTA models based on Train-Validation split of 90-10\%:
 | SE-Inception-V3 | 0.9558 | 0.96 | 0.96 | 0.96 | 0.9681 |
 | Inception-V3 + CBAM | 0.9656 | 0.97 | 0.97 | 0.97 | 0.9679 |
 | Xception | 0.9821 | 0.98 | 0.98 | 0.98 | 0.9608 |
-| OctaveResNet-50 | 0.959 | 0.96 | 0.96 | 0.96 | 0.9709 |
+| OctaveResNet-50 | 0.959 | 0.96 | 0.96 | 0.96 | **0.9709** |
 
 ## Visualization
 
