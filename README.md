@@ -47,6 +47,12 @@ The dataset used for the research is a slightly modified    version    of    the
 
 #### `train_k_fold_tpu.py` can only run either on [Google Colab](https://colab.research.google.com/) or [GCP](https://console.cloud.google.com/) because TPUs are currently available on these online platforms.
 
+## Methodology Flowchart
+
+The figure below shows flowchart of our proposed methedology:
+
+<img src="images/histopathology_flowchart.jpg" >
+
 ## Results Table
 K-Fold result table of ```Model/baseline_model.py```:
 | CNN Model | AUC-ROC |
